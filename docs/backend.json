@@ -1,0 +1,93 @@
+
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "lastLogin": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Order": {
+      "title": "Order",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "orderNumber": { "type": "string" },
+        "client": { "type": "string" },
+        "userId": { "type": "string" }
+      }
+    },
+    "Client": {
+      "title": "Client",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "userId": { "type": "string" }
+      }
+    },
+    "FixedExpense": {
+      "title": "Fixed Expense",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "paymentMethod": { "type": "string", "enum": ["bank_transfer", "card", "cash"] },
+        "vatType": { "type": "string", "enum": ["vat_20", "vat_0", "non_taxable"] },
+        "isRecurring": { "type": "boolean" },
+        "defaultAmount": { "type": "number" },
+        "creationMonth": { "type": "string" },
+        "userId": { "type": "string" }
+      }
+    },
+    "MonthlyExpense": {
+      "title": "Monthly Expense",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "expenseId": { "type": "string" },
+        "month": { "type": "string" },
+        "amount": { "type": "number" },
+        "userId": { "type": "string" }
+      }
+    },
+    "VariableExpense": {
+      "title": "Variable Expense",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "format": "date-time" },
+        "hasInvoice": { "type": "boolean" },
+        "userId": { "type": "string" }
+      }
+    },
+    "MonthlyIncome": {
+      "title": "Monthly Income",
+      "type": "object",
+      "properties": {
+        "month": { "type": "string" },
+        "bank": { "type": "number" },
+        "cash": { "type": "number" },
+        "userId": { "type": "string" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["password"]
+  },
+  "firestore": {
+    "/users/{userId}": { "schema": { "$ref": "#/entities/User" } },
+    "/orders/{id}": { "schema": { "$ref": "#/entities/Order" } },
+    "/clients/{id}": { "schema": { "$ref": "#/entities/Client" } },
+    "/fixedExpenses/{id}": { "schema": { "$ref": "#/entities/FixedExpense" } },
+    "/monthlyExpenses/{id}": { "schema": { "$ref": "#/entities/MonthlyExpense" } },
+    "/variableExpenses/{id}": { "schema": { "$ref": "#/entities/VariableExpense" } },
+    "/monthlyIncomes/{id}": { "schema": { "$ref": "#/entities/MonthlyIncome" } }
+  }
+}
