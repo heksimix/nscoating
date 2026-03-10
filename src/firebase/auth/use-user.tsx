@@ -26,18 +26,19 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         return;
     };
     
-    const unsubscribe = onAuthStateChanged(auth, async (authUser) => {
-        setIsLoading(true);
+    const unsubscribe = onAuthStateChanged(auth, (authUser) => {
+        // Задаваме потребителя веднага, за да деблокираме UI зареждането
+        setUser(authUser);
+        setIsLoading(false);
+
         if (authUser) {
+            // Синхронизацията с профила се случва във фонов режим
             const db = getFirestore(auth.app);
             const userRef = doc(db, 'users', authUser.uid);
             
-            try {
-                // Опитваме се да създадем/обновим потребителския профил само ако правилата позволяват
-                const userDoc = await getDoc(userRef);
-
+            getDoc(userRef).then((userDoc) => {
                 if (!userDoc.exists()) {
-                    await setDoc(userRef, {
+                    setDoc(userRef, {
                         uid: authUser.uid,
                         email: authUser.email,
                         displayName: authUser.displayName,
@@ -46,19 +47,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
                         lastLogin: serverTimestamp(),
                     });
                 } else {
-                    await setDoc(userRef, {
+                    setDoc(userRef, {
                         lastLogin: serverTimestamp()
                     }, { merge: true });
                 }
-            } catch (error) {
-                console.warn("User profile management restricted by rules or connectivity:", error);
-            }
-
-            setUser(authUser);
-        } else {
-            setUser(null);
+            }).catch(error => {
+                console.warn("User profile background sync issue:", error);
+            });
         }
-        setIsLoading(false);
     });
 
     return () => unsubscribe();

@@ -5,8 +5,8 @@ import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
 
 /**
- * Компонент, който слуша за грешки от Firestore (като липса на права)
- * и ги предава на Next.js грешките, за да бъдат лесно откриваеми по време на разработка.
+ * Компонент, който слуша за грешки от Firestore и ги логва,
+ * без да блокира зареждането на основното приложение.
  */
 export function FirebaseErrorListener() {
   const [error, setError] = useState<FirestorePermissionError | null>(null);
@@ -21,11 +21,6 @@ export function FirebaseErrorListener() {
     return () => errorEmitter.off('permission-error', handler);
   }, []);
 
-  if (error) {
-    // Вече не хвърляме грешката директно тук, за да не сриваме целия React tree,
-    // а я оставяме в състоянието или я логваме за диагностика.
-    return null;
-  }
-
+  // Винаги връщаме null, за да не пречим на рендирането на останалите компоненти
   return null;
 }
