@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -7,7 +6,7 @@ import type { Order, Client, OrderFormData, FixedExpense, MonthlyExpense, Variab
 import { format } from 'date-fns';
 import { useUser } from '@/firebase/auth/use-user';
 import { useFirestore } from '@/firebase/provider';
-import { collection, doc, addDoc, setDoc, deleteDoc, Timestamp, getDoc, onSnapshot, query, where, writeBatch } from 'firebase/firestore';
+import { collection, doc, addDoc, setDoc, deleteDoc, Timestamp, onSnapshot, writeBatch } from 'firebase/firestore';
 
 interface AppDataContextType {
   orders: Order[];
@@ -209,8 +208,6 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     if (!user || !db) return;
     const monthStr = format(month, "yyyy-MM");
     const docId = `${expenseId}_${monthStr}`;
-    
-    // Вземаме метаданните от съществуващия шаблон, ако не са подадени
     const template = templateInfo || fixedExpenses.find(fe => fe.id === expenseId);
     
     const payload = sanitizeForFirestore({ 
@@ -256,10 +253,12 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     const monthStr = format(month, "yyyy-MM");
     const docRef = doc(db, 'monthlyIncomes', monthStr);
     try {
-        const snap = await getDoc(docRef);
-        const data = snap.exists() ? snap.data() : { month: monthStr, bank: 0, cash: 0, userId: user.uid };
-        const payload = sanitizeForFirestore({ ...data, [type]: amount, userId: user.uid });
-        if (payload.bank === 0 && payload.cash === 0) await deleteDoc(docRef); else await setDoc(docRef, payload);
+        const payload = sanitizeForFirestore({
+            month: monthStr,
+            [type]: amount,
+            userId: user.uid
+        });
+        await setDoc(docRef, payload, { merge: true });
     } catch (err) { console.error(err); }
   }, [user, db]);
 

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useAppData } from "@/hooks/use-app-data";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { format, addMonths, subMonths } from "date-fns";
@@ -321,7 +321,7 @@ export function ExpensesManagement() {
   } = useAppData();
   const { toast } = useToast();
   
-  const [currentMonth, setCurrentMonth] = React.useState(new Date());
+  const [currentMonth, setCurrentMonth] = React.useState<Date | null>(null);
   const [isAddExpenseOpen, setAddExpenseOpen] = React.useState(false);
   const [addingFixedExpense, setAddingFixedExpense] = React.useState<{ paymentMethod: 'bank_transfer' | 'card' } | null>(null);
   const [editingFixedExpense, setEditingFixedExpense] = React.useState<{ fe: FixedExpense, initialAmount: number } | null>(null);
@@ -332,7 +332,7 @@ export function ExpensesManagement() {
   const [deletingFixedExpense, setDeletingFixedExpense] = React.useState<{ id: string, name: string } | null>(null);
   const [libraryFilter, setLibraryFilter] = React.useState<'all' | 'bank_transfer' | 'card'>('all');
 
-  const monthString = format(currentMonth, 'yyyy-MM');
+  const monthString = currentMonth ? format(currentMonth, 'yyyy-MM') : "";
   
   const currentMonthIncome = React.useMemo(() => 
     monthlyIncomes.find(i => i.month === monthString) || { month: monthString, bank: 0, cash: 0 },
@@ -343,6 +343,16 @@ export function ExpensesManagement() {
   const [cashIncomeInput, setCashIncomeInput] = React.useState({ net: '', gross: '' });
 
   React.useEffect(() => {
+    if (!currentMonth) {
+        setCurrentMonth(new Date());
+    }
+  }, [currentMonth]);
+
+  React.useEffect(() => {
+    if (!monthString) return;
+    
+    // Only update if current input doesn't match and we aren't editing? 
+    // Simplified: update on month change
     setBankIncomeInput({ 
         net: currentMonthIncome.bank > 0 ? currentMonthIncome.bank.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.bank > 0 ? (currentMonthIncome.bank * 1.2).toString().replace('.', ',') : '' 
@@ -351,13 +361,14 @@ export function ExpensesManagement() {
         net: currentMonthIncome.cash > 0 ? currentMonthIncome.cash.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.cash > 0 ? (currentMonthIncome.cash * 1.2).toString().replace('.', ',') : '' 
     });
-  }, [currentMonthIncome.bank, currentMonthIncome.cash, currentMonthIncome.month]);
+  }, [currentMonthIncome.month, monthString]); // Removed .bank/.cash to prevent wiping typing
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(amount);
   };
 
   const handleIncomeChange = (val: string, method: 'bank' | 'cash', type: 'net' | 'gross') => {
+      if (!currentMonth) return;
       const num = parseFloat(val.replace(',', '.')) || 0;
       if (type === 'net') {
           updateMonthlyIncome(currentMonth, method, num);
@@ -367,6 +378,7 @@ export function ExpensesManagement() {
   };
 
   const handleAddFixedExpense = async (data: BankCardExpenseFormData) => {
+    if (!currentMonth) return;
     const { amount, isRecurring, ...expenseData } = data;
     let expenseId = '';
     let template: FixedExpense | null = null;
@@ -385,7 +397,7 @@ export function ExpensesManagement() {
   };
 
   const handleUpdateFixedMetadata = async (data: BankCardExpenseFormData) => {
-      if (editingFixedExpense) {
+      if (editingFixedExpense && currentMonth) {
           const { amount, isRecurring, ...expenseData } = data;
           const templateUpdate = { id: editingFixedExpense.fe.id, ...expenseData, isRecurring };
           updateFixedExpense(templateUpdate);
@@ -395,6 +407,7 @@ export function ExpensesManagement() {
   }
 
   const handleSelectTemplate = (template: FixedExpense) => {
+    if (!currentMonth) return;
     updateMonthlyExpense(template.id, currentMonth, template.defaultAmount || 0, template);
   };
 
@@ -408,7 +421,7 @@ export function ExpensesManagement() {
     
     templatesToProcess.forEach(fe => {
         const isAlreadyAdded = monthlyExpenses.some(me => me.expenseId === fe.id && me.month === monthString);
-        if (!isAlreadyAdded) {
+        if (!isAlreadyAdded && currentMonth) {
             updateMonthlyExpense(fe.id, currentMonth, fe.defaultAmount || 0, fe);
         }
     });
@@ -495,7 +508,7 @@ export function ExpensesManagement() {
     }
   };
 
-  if (!isDataLoaded) return <div className="p-8 text-center">Зареждане...</div>;
+  if (!isDataLoaded || !currentMonth) return <div className="p-8 text-center">Зареждане...</div>;
 
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
@@ -506,9 +519,9 @@ export function ExpensesManagement() {
                 <SidebarTrigger className="lg:hidden"/>
             </div>
             <div className="flex items-center gap-2 text-lg font-semibold capitalize">
-                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(subMonths(currentMonth, 1))}><ChevronLeft className="h-4 w-4" /></Button>
+                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(subMonths(currentMonth!, 1))}><ChevronLeft className="h-4 w-4" /></Button>
                 <span>{format(currentMonth, "LLLL yyyy", { locale: bg })}</span>
-                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(addMonths(currentMonth, 1))}><ChevronRight className="h-4 w-4" /></Button>
+                <Button variant="outline" size="icon" onClick={() => setCurrentMonth(addMonths(currentMonth!, 1))}><ChevronRight className="h-4 w-4" /></Button>
             </div>
         </CardHeader>
       </Card>

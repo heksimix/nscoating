@@ -1,14 +1,14 @@
-"use client";
-
 import { Inter } from 'next/font/google'
 import './globals.css';
-import { Toaster } from "@/components/ui/toaster";
-import { AppDataProvider } from '@/hooks/use-app-data';
-import { ThemeProvider } from '@/hooks/use-theme';
-import { FirebaseClientProvider } from '@/firebase/client-provider';
-import { UserProvider } from '@/firebase/auth/use-user';
+import { Providers } from '@/components/providers';
+import { Metadata } from 'next';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+
+export const metadata: Metadata = {
+  title: 'Управление на поръчки',
+  description: 'Приложение за управление на поръчки.',
+};
 
 export default function RootLayout({
   children,
@@ -17,21 +17,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="bg" suppressHydrationWarning>
-      <head>
-          <title>Управление на поръчки</title>
-          <meta name="description" content="Приложение за управление на поръчки." />
-      </head>
       <body className={`font-sans antialiased ${inter.variable}`}>
-        <ThemeProvider defaultTheme="light" storageKey="orderly-theme">
-          <FirebaseClientProvider>
-            <UserProvider>
-              <AppDataProvider>
-                {children}
-              </AppDataProvider>
-            </UserProvider>
-          </FirebaseClientProvider>
-          <Toaster />
-        </ThemeProvider>
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );
