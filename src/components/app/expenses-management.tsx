@@ -367,11 +367,27 @@ export function ExpensesManagement() {
 
   const handleIncomeChange = (val: string, method: 'bank' | 'cash', type: 'net' | 'gross') => {
       if (!currentMonth) return;
-      const num = parseFloat(val.replace(',', '.')) || 0;
-      if (type === 'net') {
-          updateMonthlyIncome(currentMonth, method, num);
+      const cleanedVal = val.replace(',', '.');
+      const num = parseFloat(cleanedVal) || 0;
+      
+      if (method === 'bank') {
+          if (type === 'net') {
+              updateMonthlyIncome(currentMonth, 'bank', num);
+              setBankIncomeInput(prev => ({ ...prev, net: val, gross: (num * 1.2).toFixed(2).replace('.', ',') }));
+          } else {
+              const net = num / 1.2;
+              updateMonthlyIncome(currentMonth, 'bank', net);
+              setBankIncomeInput(prev => ({ ...prev, gross: val, net: net.toFixed(2).replace('.', ',') }));
+          }
       } else {
-          updateMonthlyIncome(currentMonth, method, num / 1.2);
+          if (type === 'net') {
+              updateMonthlyIncome(currentMonth, 'cash', num);
+              setCashIncomeInput(prev => ({ ...prev, net: val, gross: (num * 1.2).toFixed(2).replace('.', ',') }));
+          } else {
+              const net = num / 1.2;
+              updateMonthlyIncome(currentMonth, 'cash', net);
+              setCashIncomeInput(prev => ({ ...prev, gross: val, net: net.toFixed(2).replace('.', ',') }));
+          }
       }
   };
 
