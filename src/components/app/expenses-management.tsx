@@ -351,8 +351,6 @@ export function ExpensesManagement() {
   React.useEffect(() => {
     if (!monthString) return;
     
-    // Only update if current input doesn't match and we aren't editing? 
-    // Simplified: update on month change
     setBankIncomeInput({ 
         net: currentMonthIncome.bank > 0 ? currentMonthIncome.bank.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.bank > 0 ? (currentMonthIncome.bank * 1.2).toString().replace('.', ',') : '' 
@@ -361,7 +359,7 @@ export function ExpensesManagement() {
         net: currentMonthIncome.cash > 0 ? currentMonthIncome.cash.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.cash > 0 ? (currentMonthIncome.cash * 1.2).toString().replace('.', ',') : '' 
     });
-  }, [currentMonthIncome.month, monthString]); // Removed .bank/.cash to prevent wiping typing
+  }, [currentMonthIncome.month, monthString]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(amount);

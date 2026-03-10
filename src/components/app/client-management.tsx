@@ -1,12 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { Trash2, Edit, User, Phone, ChevronDown, Eye, MoreHorizontal, FileText, MapPin } from "lucide-react";
+import { Trash2, Edit, User, Phone, ChevronDown, Eye, MoreHorizontal, FileText, MapPin, Search, X } from "lucide-react";
 import NextLink from "next/link";
 
 import type { Client, Contact } from "@/lib/schemas";
 import { useAppData } from "@/hooks/use-app-data";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -87,6 +88,7 @@ export function ClientManagement() {
   const { clients, updateClient, deleteClient } = useAppData();
   const [editingClient, setEditingClient] = React.useState<Client | null>(null);
   const [deletingClient, setDeletingClient] = React.useState<Client | null>(null);
+  const [searchQuery, setSearchQuery] = React.useState("");
 
   const handleEditClick = (client: Client) => {
     setEditingClient(client);
@@ -104,8 +106,38 @@ export function ClientManagement() {
     }
   }
 
+  const filteredClients = React.useMemo(() => {
+    if (!searchQuery.trim()) return clients;
+    const query = searchQuery.toLowerCase();
+    return clients.filter(c => 
+        c.name.toLowerCase().includes(query) ||
+        (c.address && c.address.toLowerCase().includes(query)) ||
+        (c.eik && c.eik.toLowerCase().includes(query))
+    );
+  }, [clients, searchQuery]);
+
   return (
-    <div>
+    <div className="space-y-4">
+      <div className="relative w-full lg:max-w-sm">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input 
+            placeholder="Търсене по име, ЕИК или адрес..." 
+            className="pl-8 pr-8 h-9"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          {searchQuery && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-0 top-0 h-9 w-9 text-muted-foreground hover:text-foreground"
+                onClick={() => setSearchQuery("")}
+              >
+                  <X className="h-4 w-4" />
+              </Button>
+          )}
+      </div>
+
       {/* Desktop View */}
       <div className="hidden lg:block rounded-md border">
         <Table>
@@ -119,7 +151,7 @@ export function ClientManagement() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {clients.map((client) => (
+            {filteredClients.map((client) => (
               <TableRow key={client.id}>
                 <TableCell className="font-semibold">
                   <NextLink href={`/clients/${client.id}`} className="hover:underline">
@@ -163,7 +195,7 @@ export function ClientManagement() {
                 </TableCell>
               </TableRow>
             ))}
-             {clients.length === 0 && (
+             {filteredClients.length === 0 && (
                 <TableRow>
                     <TableCell colSpan={5} className="h-24 text-center">Няма намерени клиенти.</TableCell>
                 </TableRow>
@@ -174,7 +206,7 @@ export function ClientManagement() {
 
       {/* Mobile & Tablet View */}
         <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
-            {clients.map((client) => (
+            {filteredClients.map((client) => (
                 <Card key={client.id} className="break-inside-avoid">
                     <CardHeader>
                         <div className="flex items-start justify-between gap-4">
@@ -230,7 +262,7 @@ export function ClientManagement() {
                     </CardContent>
                 </Card>
             ))}
-            {clients.length === 0 && (
+            {filteredClients.length === 0 && (
                 <div className="text-center p-8 text-muted-foreground col-span-full">Няма намерени клиенти.</div>
             )}
         </div>

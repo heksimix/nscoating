@@ -20,9 +20,9 @@ export interface LocalReportOutput {
 export function generateLocalReport(orders: Order[], interval?: { start: Date; end: Date }): LocalReportOutput {
   let filteredOrders = orders;
 
-  if (interval) {
+  if (interval && interval.start) {
     const from = startOfDay(interval.start);
-    const to = endOfDay(interval.end);
+    const to = endOfDay(interval.end || interval.start);
 
     filteredOrders = orders.filter(order => {
       const receivedDate = new Date(order.receivedDate);
