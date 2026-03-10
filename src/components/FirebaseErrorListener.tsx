@@ -13,6 +13,7 @@ export function FirebaseErrorListener() {
 
   useEffect(() => {
     const handler = (err: FirestorePermissionError) => {
+      console.error("Firestore Permission Error detected:", err);
       setError(err);
     };
 
@@ -21,8 +22,9 @@ export function FirebaseErrorListener() {
   }, []);
 
   if (error) {
-    // Хвърляме грешката, за да активираме Next.js error overlay
-    throw error;
+    // Вече не хвърляме грешката директно тук, за да не сриваме целия React tree,
+    // а я оставяме в състоянието или я логваме за диагностика.
+    return null;
   }
 
   return null;

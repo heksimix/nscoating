@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -43,7 +42,11 @@ function HomeWithSearchParams() {
 
 export default function Home() {
   return (
-    <Suspense>
+    <Suspense fallback={
+      <div className="flex h-screen w-screen items-center justify-center">
+        <div>Зареждане на приложението...</div>
+      </div>
+    }>
       <HomeWithSearchParams />
     </Suspense>
   );

@@ -19,18 +19,31 @@ interface FirebaseServices {
 
 export function FirebaseClientProvider({ children }: FirebaseClientProviderProps) {
   const [firebaseServices, setFirebaseServices] = useState<FirebaseServices | null>(null);
+  const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Initialize Firebase on the client side, once per component mount.
-    setFirebaseServices(initializeFirebase());
-  }, []); // Empty dependency array ensures this runs only once on mount on the client.
+    try {
+      // Initialize Firebase on the client side, once per component mount.
+      setFirebaseServices(initializeFirebase());
+    } catch (error: any) {
+      console.error("Firebase initialization failed:", error);
+      setInitError(error.message || "Unknown initialization error");
+    }
+  }, []);
+
+  if (initError) {
+    return (
+      <div className="flex h-screen w-screen flex-col items-center justify-center p-4 text-center">
+        <h1 className="text-xl font-bold text-destructive mb-2">Грешка при стартиране</h1>
+        <p className="text-muted-foreground">{initError}</p>
+      </div>
+    );
+  }
 
   if (!firebaseServices) {
-    // Render a loading state while Firebase is initializing.
-    // This prevents children from trying to use Firebase before it's ready.
     return (
         <div className="flex h-screen w-screen items-center justify-center">
-            <div>Зареждане...</div>
+            <div>Зареждане на Firebase услуги...</div>
         </div>
     );
   }
