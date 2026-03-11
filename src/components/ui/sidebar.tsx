@@ -641,10 +641,10 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
+  // Use state and useEffect to avoid hydration mismatch
   const [width, setWidth] = React.useState("70%");
-  
+
   React.useEffect(() => {
-    // Генерираме случайна широчина само на клиента след хидратация
     setWidth(`${Math.floor(Math.random() * 40) + 50}%`);
   }, []);
 
