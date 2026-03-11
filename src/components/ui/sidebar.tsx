@@ -123,7 +123,7 @@ const SidebarProvider = React.forwardRef<
     )
 
     return (
-      <SidebarContext.Provider value={contextValue}>
+      <SidebarContext.Provider value={{ ...contextValue }}>
         <TooltipProvider delayDuration={0}>
           <div
             style={
@@ -641,7 +641,7 @@ const SidebarMenuSkeleton = React.forwardRef<
     showIcon?: boolean
   }
 >(({ className, showIcon = false, ...props }, ref) => {
-  // Use state and useEffect to avoid hydration mismatch
+  // Използваме state и useEffect, за да избегнем грешки при хидратация (Hydration Mismatch)
   const [width, setWidth] = React.useState("70%");
 
   React.useEffect(() => {
