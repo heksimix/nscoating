@@ -199,8 +199,8 @@ const Sidebar = React.forwardRef<
             }
             side={side}
           >
-            <SheetTitle className="sr-only">Меню</SheetTitle>
-            <SheetDescription className="sr-only">Навигация на приложението</SheetDescription>
+            <SheetTitle className="sr-only">Навигация</SheetTitle>
+            <SheetDescription className="sr-only">Основно меню на приложението</SheetDescription>
             <div className="flex h-full w-full flex-col">{children}</div>
           </SheetContent>
         </Sheet>
@@ -644,6 +644,7 @@ const SidebarMenuSkeleton = React.forwardRef<
   const [width, setWidth] = React.useState("70%");
   
   React.useEffect(() => {
+    // Генерираме случайна широчина само на клиента след хидратация
     setWidth(`${Math.floor(Math.random() * 40) + 50}%`);
   }, []);
 
