@@ -29,7 +29,6 @@ import { Separator } from "../ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
-
 const ContactsCell = ({ contacts }: { contacts?: Contact[] }) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -83,7 +82,6 @@ const ContactsCell = ({ contacts }: { contacts?: Contact[] }) => {
         </div>
     );
 };
-
 
 export function ClientManagement() {
   const { clients, updateClient, deleteClient } = useAppData();

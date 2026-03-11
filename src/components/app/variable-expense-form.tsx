@@ -129,7 +129,7 @@ export function VariableExpenseForm({ onSubmit, expense, onDone }: { onSubmit: (
             form.setValue('amount', 0, { shouldValidate: true });
         }
 
-    }, [hasInvoice, form]); // fixed missing dependency error by keeping logic but ensuring clean deps
+    }, [hasInvoice, form, grossAmountStr]); 
     
     const handleSubmit = (data: VariableExpenseFormData) => {
         if (isEditMode && expense) {

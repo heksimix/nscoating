@@ -33,7 +33,8 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
     }
   }, []);
 
-  // На сървъра и при първия рендер на клиента показваме едно и също състояние
+  // В Next.js е критично първият рендер на клиента да съвпада със сървъра
+  // Затова докато не се монтира компонента и услугите не са готови, показваме консистентно състояние
   if (!isMounted || !firebaseServices) {
     if (initError) {
       return (
@@ -48,7 +49,7 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
         <div className="flex h-screen w-screen items-center justify-center">
             <div className="flex flex-col items-center gap-2">
                 <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-                <div>Свързване с услугите...</div>
+                <div>Зареждане...</div>
             </div>
         </div>
     );
