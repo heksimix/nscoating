@@ -17,42 +17,33 @@ interface FirebaseServices {
   firestore: Firestore;
 }
 
-// Инициализираме услугите веднага, ако сме в браузъра, за да избегнем "flash of loading"
-let globalServices: FirebaseServices | null = null;
-if (typeof window !== 'undefined') {
-  try {
-    globalServices = initializeFirebase();
-  } catch (e) {
-    console.error("Immediate Firebase init failed:", e);
-  }
-}
-
 export function FirebaseClientProvider({ children }: FirebaseClientProviderProps) {
-  const [firebaseServices] = useState<FirebaseServices | null>(globalServices);
+  const [firebaseServices, setFirebaseServices] = useState<FirebaseServices | null>(null);
   const [initError, setInitError] = useState<string | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    if (!firebaseServices && typeof window !== 'undefined') {
-      try {
-        // Fallback ако първоначалната инициализация е била неуспешна
-        initializeFirebase();
-      } catch (error: any) {
-        console.error("Firebase initialization failed in effect:", error);
-        setInitError(error.message || "Грешка при свързване с Firebase");
-      }
+    setIsMounted(true);
+    try {
+      const services = initializeFirebase();
+      setFirebaseServices(services);
+    } catch (error: any) {
+      console.error("Firebase initialization failed:", error);
+      setInitError(error.message || "Грешка при свързване с Firebase");
     }
-  }, [firebaseServices]);
+  }, []);
 
-  if (initError) {
-    return (
-      <div className="flex h-screen w-screen flex-col items-center justify-center p-4 text-center">
-        <h1 className="text-xl font-bold text-destructive mb-2">Грешка при стартиране</h1>
-        <p className="text-muted-foreground">{initError}</p>
-      </div>
-    );
-  }
+  // На сървъра и при първия рендер на клиента показваме едно и също състояние
+  if (!isMounted || !firebaseServices) {
+    if (initError) {
+      return (
+        <div className="flex h-screen w-screen flex-col items-center justify-center p-4 text-center">
+          <h1 className="text-xl font-bold text-destructive mb-2">Грешка при стартиране</h1>
+          <p className="text-muted-foreground">{initError}</p>
+        </div>
+      );
+    }
 
-  if (!firebaseServices) {
     return (
         <div className="flex h-screen w-screen items-center justify-center">
             <div className="flex flex-col items-center gap-2">
