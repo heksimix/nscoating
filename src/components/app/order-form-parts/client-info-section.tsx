@@ -146,7 +146,7 @@ export function ClientInfoSection({ form, clients }: ClientInfoSectionProps) {
                                                         {searchQuery.trim() && (
                                                             <Button variant="link" className="h-auto p-1 mt-2" onClick={() => handleOpenAddClientDialog(searchQuery)}>
                                                                 <UserPlus className="mr-2 h-4 w-4" />
-                                                                Създай нов клиент "{searchQuery}"
+                                                                Създай нов клиент &quot;{searchQuery}&quot;
                                                             </Button>
                                                         )}
                                                     </div>
@@ -280,4 +280,3 @@ export function ClientInfoSection({ form, clients }: ClientInfoSectionProps) {
         </div>
     );
 }
-    

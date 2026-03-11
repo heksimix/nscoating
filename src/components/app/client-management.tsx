@@ -31,13 +31,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 
 
 const ContactsCell = ({ contacts }: { contacts?: Contact[] }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+
     if (!contacts || contacts.length === 0) {
         return <span className="text-sm text-muted-foreground">Няма добавени лица за контакт.</span>;
     }
 
     const firstContact = contacts[0];
     const remainingCount = contacts.length - 1;
-    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
         <div className="flex flex-col gap-1">

@@ -5,13 +5,11 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { useAppData } from "@/hooks/use-app-data";
 import { useUser } from "@/firebase/auth/use-user";
-import type { Order, OrderFormData, Client } from "@/lib/schemas";
-import { AppSidebar } from "@/components/app/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import type { Order, OrderFormData } from "@/lib/schemas";
+import { SidebarInset } from "@/components/ui/sidebar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { AddOrderForm } from "@/components/app/add-order-form";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 
 function EditOrderPageContent() {
@@ -82,7 +80,7 @@ function EditOrderPageContent() {
                 <CardHeader>
                     <CardTitle>Поръчка #{order.orderNumber}</CardTitle>
                     <CardDescription>
-                        Направете промени по поръчката тук. Натиснете "Запази промените", когато сте готови.
+                        Направете промени по поръчката тук. Натиснете &quot;Запази промените&quot;, когато сте готови.
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -101,12 +99,8 @@ function EditOrderPageContent() {
 
 export default function EditOrderPage() {
     return (
-        <SidebarProvider>
-            <AppSidebar pathname="/" />
-            <SidebarInset>
-                <EditOrderPageContent />
-            </SidebarInset>
-        </SidebarProvider>
+        <SidebarInset>
+            <EditOrderPageContent />
+        </SidebarInset>
     );
 }
-

@@ -129,7 +129,7 @@ export function VariableExpenseForm({ onSubmit, expense, onDone }: { onSubmit: (
             form.setValue('amount', 0, { shouldValidate: true });
         }
 
-    }, [hasInvoice, form]);
+    }, [hasInvoice, form, grossAmountStr]);
     
     const handleSubmit = (data: VariableExpenseFormData) => {
         if (isEditMode && expense) {

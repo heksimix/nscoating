@@ -359,7 +359,7 @@ export function ExpensesManagement() {
         net: currentMonthIncome.cash > 0 ? currentMonthIncome.cash.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.cash > 0 ? (currentMonthIncome.cash * 1.2).toString().replace('.', ',') : '' 
     });
-  }, [currentMonthIncome.month, monthString]);
+  }, [currentMonthIncome.month, currentMonthIncome.bank, currentMonthIncome.cash, monthString]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(amount);

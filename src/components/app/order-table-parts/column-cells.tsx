@@ -58,7 +58,7 @@ const ReasonDialog = ({
         <Dialog open={isOpen} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Причина за статус "Няма"</DialogTitle>
+                    <DialogTitle>Причина за статус &quot;Няма&quot;</DialogTitle>
                     <DialogDescription>
                         Моля, въведете причина, поради която тази поръчка няма плащане. Полето е задължително.
                     </DialogDescription>
@@ -162,7 +162,7 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
                         {statuses.map(status => (
                             <DropdownMenuItem 
                                 key={status} 
-                                onSelect={(e) => {
+                                onSelect={() => {
                                     handleStatusChange(status);
                                 }}
                             >
@@ -186,7 +186,7 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
                             {methods.map(method => (
                                 <DropdownMenuItem 
                                     key={method} 
-                                    onSelect={(e) => {
+                                    onSelect={() => {
                                         handleMethodChange(method);
                                     }}
                                 >
@@ -256,13 +256,13 @@ export const EditableTextCell = ({
   const isNumeric = id === 'quantity' || id === 'priceWithoutVAT';
   const isPrice = id === 'priceWithoutVAT';
   
-  const formatForDisplay = (val: any) => {
+  const formatForDisplay = React.useCallback((val: any) => {
     if (val === null || val === undefined || val === "") return "";
     if (isPrice && typeof val === 'number') {
         return val.toFixed(2).replace('.', ',');
     }
     return val.toString().replace('.', ',');
-  }
+  }, [isPrice]);
 
   const [value, setValue] = React.useState(formatForDisplay(initialValue));
   const { updateOrder } = table.options.meta;
@@ -273,7 +273,7 @@ export const EditableTextCell = ({
 
   React.useEffect(() => {
     setValue(formatForDisplay(initialValue));
-  }, [initialValue]);
+  }, [initialValue, formatForDisplay]);
 
   const handleSave = () => {
     const cleanedValue = value.replace(',', '.');

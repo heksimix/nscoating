@@ -132,7 +132,8 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
 
   React.useEffect(() => {
     if (orderIdFromUrl && isDataLoaded && orders.length > 0) {
-        handleEdit(orders.find(o => o.id === orderIdFromUrl)!);
+        const target = orders.find(o => o.id === orderIdFromUrl);
+        if (target) handleEdit(target);
         const currentUrl = new URL(window.location.href);
         currentUrl.searchParams.delete('order');
         window.history.replaceState({ ...window.history.state, as: currentUrl.pathname, url: currentUrl.toString() }, '', currentUrl.toString());
@@ -222,7 +223,7 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
           <AlertDialogHeader>
             <AlertDialogTitle>Нов клиент</AlertDialogTitle>
             <AlertDialogDescription>
-              Клиент с името '{pendingOrder?.client}' не съществува. Искате ли да го добавите към списъка с клиенти?
+              Клиент с името &apos;{pendingOrder?.client}&apos; не съществува. Искате ли да го добавите към списъка с клиенти?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
