@@ -17,19 +17,31 @@ interface FirebaseServices {
   firestore: Firestore;
 }
 
+// Инициализираме услугите веднага, ако сме в браузъра, за да избегнем "flash of loading"
+let globalServices: FirebaseServices | null = null;
+if (typeof window !== 'undefined') {
+  try {
+    globalServices = initializeFirebase();
+  } catch (e) {
+    console.error("Immediate Firebase init failed:", e);
+  }
+}
+
 export function FirebaseClientProvider({ children }: FirebaseClientProviderProps) {
-  const [firebaseServices, setFirebaseServices] = useState<FirebaseServices | null>(null);
+  const [firebaseServices] = useState<FirebaseServices | null>(globalServices);
   const [initError, setInitError] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      // Initialize Firebase on the client side, once per component mount.
-      setFirebaseServices(initializeFirebase());
-    } catch (error: any) {
-      console.error("Firebase initialization failed:", error);
-      setInitError(error.message || "Unknown initialization error");
+    if (!firebaseServices && typeof window !== 'undefined') {
+      try {
+        // Fallback ако първоначалната инициализация е била неуспешна
+        initializeFirebase();
+      } catch (error: any) {
+        console.error("Firebase initialization failed in effect:", error);
+        setInitError(error.message || "Грешка при свързване с Firebase");
+      }
     }
-  }, []);
+  }, [firebaseServices]);
 
   if (initError) {
     return (
@@ -43,7 +55,10 @@ export function FirebaseClientProvider({ children }: FirebaseClientProviderProps
   if (!firebaseServices) {
     return (
         <div className="flex h-screen w-screen items-center justify-center">
-            <div>Зареждане на Firebase услуги...</div>
+            <div className="flex flex-col items-center gap-2">
+                <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+                <div>Свързване с услугите...</div>
+            </div>
         </div>
     );
   }
