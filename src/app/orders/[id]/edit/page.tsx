@@ -88,7 +88,7 @@ function EditOrderPageContent() {
                         order={order}
                         clients={clients}
                         onUpdateOrder={handleUpdate}
-                        onAddOrder={() => {}} // Not used in edit mode
+                        onAddOrder={() => {}} 
                     />
                 </CardContent>
             </Card>

@@ -30,13 +30,18 @@ const LOCAL_STORAGE_KEY_PREFIX = "new-client-form-data";
 
 export function AddClientForm({ onAddClient, initialValues }: AddClientFormProps) {
   const isEditMode = !!initialValues;
-  const LOCAL_STORAGE_KEY = isEditMode ? `${LOCAL_STORAGE_KEY_PREFIX}-${initialValues.id}` : LOCAL_STORAGE_KEY_PREFIX;
+  const LOCAL_STORAGE_KEY = isEditMode ? `${LOCAL_STORAGE_KEY_PREFIX}-${initialValues?.id}` : LOCAL_STORAGE_KEY_PREFIX;
   
   type FormValues = z.infer<typeof clientFormSchema>;
   
   const form = useForm<FormValues>({
     resolver: zodResolver(clientFormSchema),
-    defaultValues: isEditMode ? initialValues : {
+    defaultValues: isEditMode && initialValues ? {
+      name: initialValues.name,
+      address: initialValues.address,
+      eik: initialValues.eik,
+      contacts: initialValues.contacts || [{ name: "", phone: "" }],
+    } : {
       name: "",
       address: "",
       eik: "",
@@ -49,9 +54,7 @@ export function AddClientForm({ onAddClient, initialValues }: AddClientFormProps
     name: "contacts",
   });
 
-  // Load from and save to localStorage
   React.useEffect(() => {
-    // For new clients only, persist form state.
     if(isEditMode) return;
 
     const savedData = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -75,12 +78,20 @@ export function AddClientForm({ onAddClient, initialValues }: AddClientFormProps
 
   React.useEffect(() => {
     if (initialValues) {
-        form.reset(initialValues);
+        form.reset({
+          name: initialValues.name,
+          address: initialValues.address,
+          eik: initialValues.eik,
+          contacts: initialValues.contacts || [{ name: "", phone: "" }],
+        });
     }
   }, [initialValues, form]);
 
   function onSubmit(values: FormValues) {
-    onAddClient(values);
+    onAddClient({
+      ...values,
+      contacts: values.contacts ?? []
+    });
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     if (!isEditMode) {
       form.reset({

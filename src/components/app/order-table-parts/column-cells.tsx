@@ -518,7 +518,6 @@ export const EditableOrderNumberCell = ({
         return;
     }
 
-    // Check for duplicates
     const duplicate = allOrders.find(o => o.orderNumber === trimmedValue && o.id !== order.id);
     if (duplicate) {
       toast({

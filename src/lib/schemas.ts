@@ -7,7 +7,7 @@ export const clientFormSchema = z.object({
   contacts: z.array(z.object({
     name: z.string().min(1, "Името е задължително"),
     phone: z.string().nullable().or(z.literal("")),
-  })).optional(),
+  })).optional().default([]),
 });
 
 export const orderFormSchema = z.object({
@@ -55,7 +55,7 @@ export interface Client {
   name: string;
   address: string | null;
   eik: string | null;
-  contacts: Contact[];
+  contacts?: Contact[];
   userId?: string;
 }
 

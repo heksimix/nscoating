@@ -75,9 +75,7 @@ export function ClientInfoSection({ form, clients }: ClientInfoSectionProps) {
 
     const handleAddClient = (newClientData: Omit<Client, "id">) => {
         addClient(newClientData);
-        setAddClientDialogOpen(false); // Close the 'add client' dialog
-        
-        // now update the order form with the new client
+        setAddClientDialogOpen(false); 
         form.setValue("client", newClientData.name, { shouldValidate: true });
         setSearchQuery('');
     };

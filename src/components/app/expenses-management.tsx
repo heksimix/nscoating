@@ -12,11 +12,11 @@ import {
   Euro, Landmark, Copy, Receipt, ReceiptRussianRuble, Edit, Settings2, 
   Check, ListPlus, CreditCard, LayoutGrid, Filter
 } from "lucide-react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { FixedExpense, MonthlyExpense, fixedExpenseFormSchema, VariableExpense, FixedExpenseFormData } from "@/lib/schemas";
+import { FixedExpense, MonthlyExpense, fixedExpenseFormSchema, VariableExpense, FixedExpenseFormData, VariableExpenseFormData } from "@/lib/schemas";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { Separator } from "../ui/separator";
 import { cn } from "@/lib/utils";
@@ -359,7 +359,7 @@ export function ExpensesManagement() {
         net: currentMonthIncome.cash > 0 ? currentMonthIncome.cash.toString().replace('.', ',') : '', 
         gross: currentMonthIncome.cash > 0 ? (currentMonthIncome.cash * 1.2).toString().replace('.', ',') : '' 
     });
-  }, [currentMonthIncome.month, currentMonthIncome.bank, currentMonthIncome.cash, monthString]);
+  }, [currentMonthIncome.bank, currentMonthIncome.cash, monthString]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }).format(amount);
@@ -743,7 +743,7 @@ export function ExpensesManagement() {
                                       </div>
                                       <div className="flex flex-col gap-1">
                                           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => setEditingFixedExpense({ fe: (template || { id: me.expenseId, name: me.name, paymentMethod: me.paymentMethod, vatType: me.vatType } as FixedExpense), initialAmount: me.amount })}><Edit className="h-3.5 w-3.5" /></Button>
-                                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10" onClick={() => deleteMonthlyExpense(me.expenseId, currentMonth)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10" onClick={() => deleteMonthlyExpense(me.expenseId, currentMonth!)}><Trash2 className="h-3.5 w-3.5" /></Button>
                                       </div>
                                   </div>
                               </div>
@@ -781,7 +781,7 @@ export function ExpensesManagement() {
                                       </div>
                                       <div className="flex flex-col gap-1">
                                           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-primary" onClick={() => setEditingFixedExpense({ fe: (template || { id: me.expenseId, name: me.name, paymentMethod: me.paymentMethod, vatType: me.vatType } as FixedExpense), initialAmount: me.amount })}><Edit className="h-3.5 w-3.5" /></Button>
-                                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10" onClick={() => deleteMonthlyExpense(me.expenseId, currentMonth)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                                          <Button variant="ghost" size="icon" className="h-7 w-7 text-destructive hover:bg-destructive/10" onClick={() => deleteMonthlyExpense(me.expenseId, currentMonth!)}><Trash2 className="h-3.5 w-3.5" /></Button>
                                       </div>
                                   </div>
                               </div>
@@ -1011,9 +1011,9 @@ export function ExpensesManagement() {
                   </div>
               </div>
               <Separator />
-              <DialogFooter className="p-4 bg-muted/5 flex-shrink-0">
+              <div className="p-4 bg-muted/5 flex-shrink-0 flex justify-end">
                   <Button variant="ghost" onClick={() => setIsLibraryOpen(false)} className="font-semibold">Затвори</Button>
-              </DialogFooter>
+              </div>
           </DialogContent>
       </Dialog>
 
@@ -1058,7 +1058,7 @@ export function ExpensesManagement() {
           <Dialog open={!!editingVariableExpense} onOpenChange={o => !o && setEditingVariableExpense(null)}>
               <DialogContent>
                   <DialogHeader><DialogTitle>Редактиране на касов разход</DialogTitle></DialogHeader>
-                  <VariableExpenseForm expense={editingVariableExpense} onSubmit={updateVariableExpense} onDone={() => setEditingVariableExpense(null)} />
+                  <VariableExpenseForm expense={editingVariableExpense} onSubmit={(data) => updateVariableExpense(data as VariableExpense)} onDone={() => setEditingVariableExpense(null)} />
               </DialogContent>
           </Dialog>
       )}
@@ -1067,7 +1067,7 @@ export function ExpensesManagement() {
           <Dialog open={isAddExpenseOpen} onOpenChange={setAddExpenseOpen}>
               <DialogContent>
                   <DialogHeader><DialogTitle>Добави касов разход</DialogTitle></DialogHeader>
-                  <VariableExpenseForm onSubmit={addVariableExpense} onDone={() => setAddExpenseOpen(false)} />
+                  <VariableExpenseForm onSubmit={(data) => addVariableExpense(data as VariableExpenseFormData)} onDone={() => setAddExpenseOpen(false)} />
               </DialogContent>
           </Dialog>
       )}
@@ -1086,7 +1086,7 @@ export function ExpensesManagement() {
           >
               <AlertDialogHeader>
                   <AlertDialogTitle>Изтриване на шаблон</AlertDialogTitle>
-                  <AlertDialogDescription>Сигурни ли сте, че искате да изтриете шаблона „{deletingFixedExpense?.name}“?</AlertDialogDescription>
+                  <AlertDialogDescription>Сигурни ли сте, че искате да изтриете шаблона &quot;{deletingFixedExpense?.name}&quot;?</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                   <AlertDialogCancel onClick={forceUIUnlock}>Отказ</AlertDialogCancel>

@@ -51,6 +51,10 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
     return [];
   }, [initialFilter]);
 
+  const handleEdit = React.useCallback((order: Order) => {
+    router.push(`/orders/${order.id}/edit`);
+  }, [router]);
+
   const completeAddOrder = React.useCallback(async (orderData: OrderFormData, shouldAddNewClient: boolean) => {
       if (shouldAddNewClient) {
           const newClient = await addClient({
@@ -62,7 +66,7 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
                   phone: orderData.phone || null
               }] : []
           });
-          if (!newClient) return; // Stop if client creation failed (e.g., duplicate)
+          if (!newClient) return; 
       }
       addOrder(orderData);
       setAddDialogOpen(false);
@@ -85,10 +89,6 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
   const handleUpdateOrder = React.useCallback((orderUpdate: Partial<Order>) => {
     updateOrder(orderUpdate);
   }, [updateOrder]);
-  
-  const handleEdit = React.useCallback((order: Order) => {
-    router.push(`/orders/${order.id}/edit`);
-  }, [router]);
 
   const handleDuplicate = React.useCallback((orderToDuplicate: Order) => {
     const newOrderData: OrderFormData = {
@@ -99,13 +99,13 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
             detailType: item.detailType,
             quantity: item.quantity,
             priceWithoutVAT: item.priceWithoutVAT,
-            returnDate: undefined, // Clear return date for each item
+            returnDate: undefined, 
         })),
         paymentMethod: orderToDuplicate.paymentMethod,
-        paymentStatus: 'Неплатено', // Always reset status
-        receivedDate: new Date(), // Always set to today
-        reason: null, // Clear reason
-        paymentDate: undefined, // Clear payment date
+        paymentStatus: 'Неплатено', 
+        receivedDate: new Date(), 
+        reason: null, 
+        paymentDate: undefined, 
     };
     setDuplicateOrderData(newOrderData);
     setAddDialogOpen(true);

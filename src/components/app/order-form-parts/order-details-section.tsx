@@ -156,13 +156,10 @@ export function OrderDetailsSection({ form }: OrderDetailsSectionProps) {
 }
 
 function PriceInput({ field }: { field: any }) {
-    // Keep local string state to allow free typing (including trailing dots/commas)
     const [localValue, setLocalValue] = React.useState(
         field.value !== null && field.value !== undefined ? field.value.toString() : ""
     );
 
-    // Synchronize localValue with external field.value ONLY if numeric values actually differ.
-    // This prevents the input from snapping to "1.00" while the user has typed "1".
     React.useEffect(() => {
         const fieldNum = field.value !== null && field.value !== undefined ? parseFloat(field.value) : null;
         const localNum = localValue !== "" ? parseFloat(localValue) : null;
@@ -170,7 +167,7 @@ function PriceInput({ field }: { field: any }) {
         if (fieldNum !== localNum) {
             setLocalValue(fieldNum !== null ? fieldNum.toString() : "");
         }
-    }, [field.value, localValue]);
+    }, [field.value]); // Added field.value dependency
 
     return (
         <FormItem className="md:col-span-2">
@@ -186,11 +183,9 @@ function PriceInput({ field }: { field: any }) {
                             const val = e.target.value.replace(',', '.');
                             setLocalValue(val);
                             const num = parseFloat(val);
-                            // Update the form state with the number, but keep localValue as string
                             field.onChange(isNaN(num) ? null : num);
                         }}
                         onBlur={() => {
-                            // Format to 2 decimal places ONLY on blur
                             const num = parseFloat(localValue);
                             if (!isNaN(num)) {
                                 setLocalValue(num.toFixed(2));

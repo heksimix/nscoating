@@ -113,12 +113,12 @@ export function VariableExpenseForm({ onSubmit, expense, onDone }: { onSubmit: (
         const cleanedGross = grossAmountStr.replace(',', '.');
         const grossValue = parseFloat(cleanedGross);
         if(!isNaN(grossValue)) {
-            if(hasInvoice) { // Switched TO hasInvoice
+            if(hasInvoice) { 
                 const netValue = grossValue / 1.2;
                 setNetAmountStr(netValue.toFixed(2).replace('.', ','));
                 setGrossAmountStr(grossValue.toFixed(2).replace('.', ','));
                 form.setValue('amount', netValue);
-            } else { // Switched FROM hasInvoice
+            } else { 
                 setNetAmountStr('');
                 setGrossAmountStr(grossValue.toFixed(2).replace('.', ','));
                 form.setValue('amount', grossValue);
@@ -129,11 +129,11 @@ export function VariableExpenseForm({ onSubmit, expense, onDone }: { onSubmit: (
             form.setValue('amount', 0, { shouldValidate: true });
         }
 
-    }, [hasInvoice, form, grossAmountStr]); 
+    }, [hasInvoice, form]); // Fixed dependencies
     
     const handleSubmit = (data: VariableExpenseFormData) => {
         if (isEditMode && expense) {
-            onSubmit({ id: expense.id, ...data });
+            onSubmit({ id: expense.id, ...data } as VariableExpense);
         } else {
             onSubmit(data);
         }
