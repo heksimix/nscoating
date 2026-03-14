@@ -116,6 +116,9 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
         }
     };
 
+    const statusesArray: Order['paymentStatus'][] = ["Платено", "Неплатено", "Няма"];
+    const statusInfoObj = paymentStatusConfig[order.paymentStatus];
+
     const methods: Order['paymentMethod'][] = ["В брой", "Банков превод", "Няма"];
 
     const handleMethodChange = (newMethod: Order['paymentMethod']) => {
@@ -150,16 +153,16 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
                     <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className={cn(
                             "w-fit justify-start p-0 h-auto font-normal text-left focus:ring-0 focus:ring-offset-0 rounded-full border px-2 py-0.5",
-                            statusInfo.bgColor, statusInfo.textColor, statusInfo.borderColor
+                            statusInfoObj.bgColor, statusInfoObj.textColor, statusInfoObj.borderColor
                         )}>
                             <div className="flex items-center gap-1.5">
-                                {statusInfo && React.createElement(statusInfo.icon, { className: "h-3.5 w-3.5" })}
+                                {statusInfoObj && React.createElement(statusInfoObj.icon, { className: "h-3.5 w-3.5" })}
                                 <span className="font-medium text-xs">{order.paymentStatus}</span>
                             </div>
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="start">
-                        {statuses.map(status => (
+                        {statusesArray.map(status => (
                             <DropdownMenuItem 
                                 key={status} 
                                 onSelect={() => {

@@ -77,7 +77,12 @@ export function OrderDetailsSection({ form }: OrderDetailsSectionProps) {
                                     />
                                     <FormItem className="md:col-span-2">
                                         <FormLabel>Общо ред</FormLabel>
-                                        <FormControl><Input readOnly value={lineTotal.toFixed(2) + ' €'} className="font-semibold bg-muted text-right" /></FormControl>
+                                        <FormControl>
+                                            <div className="relative">
+                                                <Input readOnly value={lineTotal.toFixed(2)} className="font-semibold bg-muted text-right pr-6" />
+                                                <span className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground text-xs">€</span>
+                                            </div>
+                                        </FormControl>
                                     </FormItem>
                                     <FormField
                                         control={form.control}
@@ -160,14 +165,15 @@ function PriceInput({ field }: { field: any }) {
         field.value !== null && field.value !== undefined ? field.value.toString() : ""
     );
 
+    // Synchronize local state with external field value
     React.useEffect(() => {
         const fieldNum = field.value !== null && field.value !== undefined ? parseFloat(field.value) : null;
-        const localNum = localValue !== "" ? parseFloat(localValue) : null;
+        const localNum = localValue !== "" ? parseFloat(localValue.replace(',', '.')) : null;
         
         if (fieldNum !== localNum) {
             setLocalValue(fieldNum !== null ? fieldNum.toString() : "");
         }
-    }, [field.value, localValue]); // Добавяме localValue към списъка
+    }, [field.value, localValue]);
 
     return (
         <FormItem className="md:col-span-2">
@@ -186,7 +192,7 @@ function PriceInput({ field }: { field: any }) {
                             field.onChange(isNaN(num) ? null : num);
                         }}
                         onBlur={() => {
-                            const num = parseFloat(localValue);
+                            const num = parseFloat(localValue.replace(',', '.'));
                             if (!isNaN(num)) {
                                 setLocalValue(num.toFixed(2));
                             }

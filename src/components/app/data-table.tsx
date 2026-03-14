@@ -268,7 +268,7 @@ export function DataTable<TData, TValue>({
                           </div>
                            <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Върната:</span>
-                              <span className="font-medium">{formatDateSafe(order.returnDate)}</span>
+                              <span className="font-medium">{formatDateSafe((order as any).returnDate)}</span>
                           </div>
                            <div className="flex justify-between items-center">
                               <span className="text-muted-foreground">Платена на:</span>
