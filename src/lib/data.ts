@@ -55,16 +55,25 @@ export const initialFixedExpenses: Omit<FixedExpense, 'id'>[] = [
   {
     name: "Наем на склад",
     paymentMethod: "bank_transfer",
-    vatType: "vat_20"
+    vatType: "vat_20",
+    isRecurring: true,
+    creationMonth: "2026-01",
+    userId: "system"
   },
   {
     name: "Електричество",
     paymentMethod: "card",
-    vatType: "vat_20"
+    vatType: "vat_20",
+    isRecurring: true,
+    creationMonth: "2026-01",
+    userId: "system"
   },
   {
     name: "Интернет и телефон",
     paymentMethod: "bank_transfer",
-    vatType: "vat_20"
+    vatType: "vat_20",
+    isRecurring: true,
+    creationMonth: "2026-01",
+    userId: "system"
   }
 ];

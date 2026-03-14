@@ -18,14 +18,14 @@ export const orderFormSchema = z.object({
     detailType: z.string().min(1, "Типът детайл е задължителен"),
     quantity: z.number().min(1, "Количеството трябва да е поне 1"),
     priceWithoutVAT: z.number().nullable(),
-    returnDate: z.date().optional(),
+    returnDate: z.date().nullable().optional(), 
   })),
   paymentMethod: z.string(),
   paymentStatus: z.string(),
   receivedDate: z.date(),
   reason: z.string().nullable().optional(),
-  paymentDate: z.date().optional(),
-  returnDate: z.date().optional(), // Added for top-level form access
+  paymentDate: z.date().nullable().optional(),
+  returnDate: z.date().nullable().optional(),
 });
 
 export const fixedExpenseFormSchema = z.object({
@@ -73,7 +73,7 @@ export interface OrderItem {
   detailType: string;
   quantity: number;
   priceWithoutVAT: number | null;
-  returnDate?: Date | string;
+  returnDate?: Date | string | null; // ПОЗВОЛЯВАМЕ NULL
 }
 
 export interface Order {
@@ -83,11 +83,11 @@ export interface Order {
   contactPerson?: string;
   phone?: string;
   items: OrderItem[];
-  paymentMethod: 'В брой' | 'Банков превод' | 'Няма' | string;
-  paymentStatus: 'Платено' | 'Неплатено' | 'Няма' | string;
+  paymentMethod: string;
+  paymentStatus: string;
   receivedDate: Date | string;
-  paymentDate?: Date | string;
-  returnDate?: Date | string; // Added for convenience in listing
+  paymentDate?: Date | string | null; // ПОЗВОЛЯВАМЕ NULL
+  returnDate?: Date | string | null;  // ПОЗВОЛЯВАМЕ NULL
   reason?: string | null;
   totalWithoutVAT: number;
   userId: string;
@@ -101,7 +101,7 @@ export interface FixedExpense {
   paymentMethod: 'bank_transfer' | 'card' | 'cash';
   vatType: 'vat_20' | 'vat_0' | 'non_taxable';
   isRecurring: boolean;
-  creationMonth: string; // yyyy-MM
+  creationMonth: string;
   defaultAmount?: number | null;
   userId: string;
 }
@@ -111,7 +111,7 @@ export type FixedExpenseFormData = z.infer<typeof fixedExpenseFormSchema>;
 export interface MonthlyExpense {
   id: string;
   expenseId: string;
-  month: string; // yyyy-MM
+  month: string;
   amount: number;
   userId: string;
   name?: string;
@@ -131,7 +131,7 @@ export interface VariableExpense {
 export type VariableExpenseFormData = z.infer<typeof variableExpenseSchema>;
 
 export interface MonthlyIncome {
-  month: string; // yyyy-MM
+  month: string;
   bank: number;
   cash: number;
   userId: string;

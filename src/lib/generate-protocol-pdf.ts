@@ -3,7 +3,7 @@
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Order, Client, ProtocolType } from './schemas';
-import { CompanyData } from '@/hooks/use-company-data';
+import { CompanyData } from './schemas';
 
 /**
  * Генерира PDF файл от елемента на протокола в DOM.

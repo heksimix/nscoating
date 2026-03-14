@@ -25,26 +25,29 @@ export function AddOrderForm({ onAddOrder, onUpdateOrder, order, clients, initia
   
   const form = useForm<OrderFormData>({
     resolver: zodResolver(orderFormSchema),
-    defaultValues: initialData ?? (isEditMode ? {
+    defaultValues: initialData ?? (isEditMode && order ? {
       ...order,
       receivedDate: new Date(order.receivedDate),
-      paymentDate: order.paymentDate ? new Date(order.paymentDate) : undefined,
+      paymentDate: order.paymentDate ? new Date(order.paymentDate) : null,
+      returnDate: order.returnDate ? new Date(order.returnDate) : null,  // ← това липсва
       reason: order.reason || '',
       contactPerson: order.contactPerson || '',
-      items: order.items.map(item => ({
+      items: (order.items || []).map((item: any) => ({
         ...item,
-        returnDate: item.returnDate ? new Date(item.returnDate) : undefined,
+        priceWithoutVAT: item.priceWithoutVAT ?? null,
+        returnDate: item.returnDate ? new Date(item.returnDate) : null,
       }))
     } : {
       client: "",
       contactPerson: "",
       phone: "",
-      items: [{ detailType: "", quantity: 1, priceWithoutVAT: null, returnDate: undefined }],
+      items: [{ detailType: "", quantity: 1, priceWithoutVAT: null, returnDate: null }],
       paymentMethod: "В брой",
       paymentStatus: "Неплатено",
       receivedDate: new Date(),
       reason: "",
-      paymentDate: undefined,
+      paymentDate: null,
+      returnDate: null,
     }),
   });
 
@@ -59,12 +62,12 @@ export function AddOrderForm({ onAddOrder, onUpdateOrder, order, clients, initia
         client: "",
         contactPerson: "",
         phone: "",
-        items: [{ detailType: "", quantity: 1, priceWithoutVAT: null, returnDate: undefined }],
+        items: [{ detailType: "", quantity: 1, priceWithoutVAT: null, returnDate: null }], // промени на null
         paymentMethod: "В брой",
         paymentStatus: "Неплатено",
         receivedDate: new Date(),
         reason: "",
-        paymentDate: undefined,
+        paymentDate: null, // промени на null
       });
     }
   }
