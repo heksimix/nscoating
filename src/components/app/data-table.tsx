@@ -218,7 +218,8 @@ export function DataTable<TData, TValue>({
                                 {order.phone && <span>тел. {order.phone}</span>}
                               </CardDescription>
                         </div>
-                        <DataTableRowActions row={row} {...table.options.meta} />
+                        {/* Прилагаме as any за избягване на TypeScript конфликти в генеричния компонент */}
+                        <DataTableRowActions row={row as any} {...(table.options.meta as any)} />
                       </div>
                   </CardHeader>
                   <CardContent className="space-y-3 text-sm">
