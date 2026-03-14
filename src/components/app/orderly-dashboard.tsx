@@ -237,7 +237,7 @@ export default function OrderlyDashboard({ orderIdFromUrl, initialFilter }: { or
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
-      </AlertDialog>
+       </AlertDialog>
     </div>
   );
 }

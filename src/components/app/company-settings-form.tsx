@@ -3,7 +3,6 @@
 import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
@@ -20,16 +19,7 @@ import { useCompanyData } from "@/hooks/use-company-data";
 import { useToast } from "@/hooks/use-toast";
 import { Upload, X } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-
-const companyDataSchema = z.object({
-  name: z.string().min(2, "Името на фирмата е задължително."),
-  address: z.string().min(5, "Адресът е задължителен."),
-  eik: z.string().min(9, "ЕИК трябва да е поне 9 символа."),
-  mol: z.string().min(3, "МОЛ е задължително поле."),
-  logoUrl: z.string().optional().nullable(),
-});
-
-type CompanyDataFormValues = z.infer<typeof companyDataSchema>;
+import { CompanyData, CompanyDataFormValues, companyDataSchema } from "@/lib/schemas"; // Стъпка 2
 
 interface CompanySettingsFormProps {
     onClose: () => void;
@@ -51,7 +41,7 @@ export function CompanySettingsForm({ onClose }: CompanySettingsFormProps) {
 
 
   function onSubmit(values: CompanyDataFormValues) {
-    setCompanyData(values);
+    setCompanyData(values as CompanyData); // Стъпка 3
     toast({
       title: "Настройките са запазени",
       description: "Данните на вашата фирма бяха успешно обновени.",

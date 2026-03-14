@@ -390,7 +390,7 @@ export default function ClientDetailPage() {
                                                         </>
                                                     )}
                                                 </div>
-                                                {index < client.contacts.length - 1 && <Separator className="mt-4" />}
+                                                {index < (client.contacts?.length ?? 0) - 1 && <Separator className="mt-4" />}
                                             </div>
                                         ))}
                                    </div>

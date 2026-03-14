@@ -1,14 +1,7 @@
 "use client";
 
 import * as React from "react";
-
-export interface CompanyData {
-  name: string;
-  address: string;
-  eik: string;
-  mol: string;
-  logoUrl: string;
-}
+import type { CompanyData } from "@/lib/schemas";
 
 const defaultCompanyData: CompanyData = {
   name: "",
@@ -22,7 +15,6 @@ export function useCompanyData() {
   const [companyData, setCompanyData] = React.useState<CompanyData>(defaultCompanyData);
   const isMounted = React.useRef(false);
 
-  // Load from localStorage on initial client-side render
   React.useEffect(() => {
     try {
       const item = window.localStorage.getItem("companyData");
@@ -34,7 +26,6 @@ export function useCompanyData() {
     }
   }, []);
 
-  // Save to localStorage on subsequent updates, skipping the initial render
   React.useEffect(() => {
     if (isMounted.current) {
       try {

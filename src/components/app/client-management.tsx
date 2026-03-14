@@ -29,6 +29,7 @@ import { Separator } from "../ui/separator";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "../ui/alert-dialog";
 
+// Helper component moved outside to respect Rules of Hooks
 const ContactsCell = ({ contacts }: { contacts?: Contact[] }) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
@@ -137,7 +138,6 @@ export function ClientManagement() {
           )}
       </div>
 
-      {/* Desktop View */}
       <div className="hidden lg:block rounded-md border">
         <Table>
           <TableHeader>
@@ -203,7 +203,6 @@ export function ClientManagement() {
         </Table>
       </div>
 
-      {/* Mobile & Tablet View */}
         <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
             {filteredClients.map((client) => (
                 <Card key={client.id} className="break-inside-avoid">

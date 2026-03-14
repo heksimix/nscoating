@@ -7,7 +7,7 @@ export const clientFormSchema = z.object({
   contacts: z.array(z.object({
     name: z.string().min(1, "Името е задължително"),
     phone: z.string().nullable().or(z.literal("")),
-  })).optional().default([]),
+  })).default([]),
 });
 
 export const orderFormSchema = z.object({
@@ -43,6 +43,15 @@ export const variableExpenseSchema = z.object({
     hasInvoice: z.boolean(),
 });
 
+// 1. Схема за фирмата (Zod) - Стъпка 1
+export const companyDataSchema = z.object({
+  name: z.string().min(1, "Името е задължително"),
+  address: z.string().min(1, "Адресът е задължителен"),
+  eik: z.string().min(1, "ЕИК е задължителен"),
+  mol: z.string().min(1, "МОЛ е задължителен"),
+  logoUrl: z.string().optional().nullable(),
+});
+
 export type ProtocolType = 'receive' | 'return';
 
 export interface Contact {
@@ -55,7 +64,7 @@ export interface Client {
   name: string;
   address: string | null;
   eik: string | null;
-  contacts?: Contact[];
+  contacts?: Contact[]; // Вариант Б - Стъпка 1
   userId?: string;
 }
 
@@ -103,7 +112,6 @@ export interface MonthlyExpense {
   month: string; // yyyy-MM
   amount: number;
   userId: string;
-  // Метаданни за независимост от шаблона
   name?: string;
   paymentMethod?: 'bank_transfer' | 'card' | 'cash';
   vatType?: 'vat_20' | 'vat_0' | 'non_taxable';
@@ -125,4 +133,12 @@ export interface MonthlyIncome {
   bank: number;
   cash: number;
   userId: string;
+}
+
+// 2. Типове за фирмата - Стъпка 1
+export type CompanyDataFormValues = z.infer<typeof companyDataSchema>;
+
+export interface CompanyData extends CompanyDataFormValues {
+  id?: string;
+  userId?: string;
 }

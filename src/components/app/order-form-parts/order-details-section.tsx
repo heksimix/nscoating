@@ -167,7 +167,7 @@ function PriceInput({ field }: { field: any }) {
         if (fieldNum !== localNum) {
             setLocalValue(fieldNum !== null ? fieldNum.toString() : "");
         }
-    }, [field.value]); // Added field.value dependency
+    }, [field.value, localValue]); // Добавяме localValue към списъка
 
     return (
         <FormItem className="md:col-span-2">

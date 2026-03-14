@@ -90,7 +90,7 @@ export function AddClientForm({ onAddClient, initialValues }: AddClientFormProps
   function onSubmit(values: FormValues) {
     onAddClient({
       ...values,
-      contacts: values.contacts ?? []
+      contacts: values.contacts ?? [] // Вариант А - гарантиране на масив
     });
     localStorage.removeItem(LOCAL_STORAGE_KEY);
     if (!isEditMode) {
