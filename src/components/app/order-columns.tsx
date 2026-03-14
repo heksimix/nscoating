@@ -145,7 +145,7 @@ export const getColumns = ({ deleteOrder, onEdit, updateOrder, onShowProtocol, o
     id: "actions",
     header: () => <div className="text-right">Действия</div>,
     cell: ({ row, table }) => {
-        const meta = table.options.meta as any;
+        const meta = table.options.meta;
         if (!meta) return null;
         return <DataTableRowActions 
             row={row} 

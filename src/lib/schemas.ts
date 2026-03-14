@@ -25,6 +25,7 @@ export const orderFormSchema = z.object({
   receivedDate: z.date(),
   reason: z.string().nullable().optional(),
   paymentDate: z.date().optional(),
+  returnDate: z.date().optional(), // Added for top-level form access
 });
 
 export const fixedExpenseFormSchema = z.object({
@@ -86,6 +87,7 @@ export interface Order {
   paymentStatus: 'Платено' | 'Неплатено' | 'Няма' | string;
   receivedDate: Date | string;
   paymentDate?: Date | string;
+  returnDate?: Date | string; // Added for convenience in listing
   reason?: string | null;
   totalWithoutVAT: number;
   userId: string;

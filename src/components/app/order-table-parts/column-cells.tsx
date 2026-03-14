@@ -109,7 +109,7 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
             if (newStatus === 'Платено' && !order.paymentDate) {
                 payload.paymentDate = new Date();
             } else if (newStatus !== 'Платено') {
-                payload.paymentDate = null;
+              payload.paymentDate = undefined;
             }
 
             updateOrder({ ...order, ...payload });
@@ -130,8 +130,8 @@ export const EditablePaymentInfoCell = ({ row, table }: { row: Row<Order>, table
             let payload: Partial<Order> = { paymentMethod: newMethod };
             if (order.paymentStatus === 'Няма') {
                 payload.paymentStatus = 'Неплатено';
-                payload.reason = null;
-                payload.paymentDate = null;
+                payload.reason = undefined;
+                payload.paymentDate = undefined;
             }
             updateOrder({ ...order, ...payload });
         }
