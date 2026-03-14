@@ -90,9 +90,9 @@ export function DateAndPaymentSection({ form }: DateAndPaymentSectionProps) {
                                         onSelect={(date) => {
                                             field.onChange(date);
                                             setIsReceivedOpen(false);
-                                            const returnDate = form.getValues("returnDate");
+                                            const returnDate = (form.getValues as any)("returnDate");
                                             if (date && returnDate && new Date(returnDate) < date) {
-                                                form.setValue("returnDate", undefined);
+                                                (form.setValue as any)("returnDate", undefined);
                                             }
                                         }}
                                         initialFocus
@@ -104,9 +104,9 @@ export function DateAndPaymentSection({ form }: DateAndPaymentSectionProps) {
                     )}
                 />
                 <FormField
-                    control={form.control}
+                    control={(form.control as any)}
                     name="returnDate"
-                    render={({ field }) => (
+                    render={({ field }: any) => (
                         <FormItem className="lg:col-span-1">
                             <FormLabel>Дата на връщане</FormLabel>
                             <Popover open={isReturnOpen} onOpenChange={setIsReturnOpen}>
