@@ -166,7 +166,7 @@ export function DateAndPaymentSection({ form }: DateAndPaymentSectionProps) {
                         </FormItem>
                     )}
                 />
-                 <FormField
+                <FormField
                     control={form.control}
                     name="paymentDate"
                     render={({ field }) => (

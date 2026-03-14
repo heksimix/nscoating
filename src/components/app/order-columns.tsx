@@ -144,7 +144,17 @@ export const getColumns = ({ deleteOrder, onEdit, updateOrder, onShowProtocol, o
   {
     id: "actions",
     header: () => <div className="text-right">Действия</div>,
-    cell: ({ row, table }) => <DataTableRowActions row={row} deleteOrder={table.options.meta.deleteOrder} onEdit={table.options.meta.onEdit} onShowProtocol={table.options.meta.onShowProtocol} onDuplicate={table.options.meta.onDuplicate} />,
+    cell: ({ row, table }) => {
+        const meta = table.options.meta as any;
+        if (!meta) return null;
+        return <DataTableRowActions 
+            row={row} 
+            deleteOrder={meta.deleteOrder} 
+            onEdit={meta.onEdit} 
+            onShowProtocol={meta.onShowProtocol} 
+            onDuplicate={meta.onDuplicate} 
+        />;
+    },
     enableSorting: false,
     enableHiding: false,
     size: 80,
