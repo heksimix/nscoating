@@ -33,6 +33,7 @@ export const fixedExpenseFormSchema = z.object({
     vatType: z.enum(['vat_20', 'vat_0', 'non_taxable']),
     isRecurring: z.boolean(),
     defaultAmount: z.number().min(0).optional().nullable(),
+    creationMonth: z.string().optional(),
 });
 
 export const variableExpenseSchema = z.object({
@@ -43,7 +44,6 @@ export const variableExpenseSchema = z.object({
     hasInvoice: z.boolean(),
 });
 
-// 1. Схема за фирмата (Zod) - Стъпка 1
 export const companyDataSchema = z.object({
   name: z.string().min(1, "Името е задължително"),
   address: z.string().min(1, "Адресът е задължителен"),
@@ -64,7 +64,7 @@ export interface Client {
   name: string;
   address: string | null;
   eik: string | null;
-  contacts?: Contact[]; // Вариант Б - Стъпка 1
+  contacts?: Contact[];
   userId?: string;
 }
 
@@ -135,7 +135,6 @@ export interface MonthlyIncome {
   userId: string;
 }
 
-// 2. Типове за фирмата - Стъпка 1
 export type CompanyDataFormValues = z.infer<typeof companyDataSchema>;
 
 export interface CompanyData extends CompanyDataFormValues {

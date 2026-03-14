@@ -31,7 +31,6 @@ export function DateAndPaymentSection({ form }: DateAndPaymentSectionProps) {
     const [isReturnOpen, setIsReturnOpen] = React.useState(false);
     const [isPaymentOpen, setIsPaymentOpen] = React.useState(false);
 
-    // Effect to synchronize payment status when method is 'Няма'
     React.useEffect(() => {
         if (watchedPaymentMethod === 'Няма') {
             form.setValue('paymentStatus', 'Няма');
@@ -42,7 +41,6 @@ export function DateAndPaymentSection({ form }: DateAndPaymentSectionProps) {
         }
     }, [watchedPaymentMethod, form]);
     
-    // Effect to synchronize payment method and date
     React.useEffect(() => {
         if (watchedPaymentStatus === 'Няма') {
             form.setValue('paymentMethod', 'Няма');

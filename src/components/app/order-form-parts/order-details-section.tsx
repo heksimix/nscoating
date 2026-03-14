@@ -165,7 +165,6 @@ function PriceInput({ field }: { field: any }) {
         field.value !== null && field.value !== undefined ? field.value.toString() : ""
     );
 
-    // Synchronize local state with external field value
     React.useEffect(() => {
         const fieldNum = field.value !== null && field.value !== undefined ? parseFloat(field.value) : null;
         const localNum = localValue !== "" ? parseFloat(localValue.replace(',', '.')) : null;
